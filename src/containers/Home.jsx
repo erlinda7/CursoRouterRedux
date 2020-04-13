@@ -1,45 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import Search from '../components/Search';
-import Categories from '../components/Categories';
-import Carousel from '../components/Carousel';
-import CarouselItem from '../components/CarouselItem';
-import Footer from '../components/Footer';
-import useInitialState from '../hooks/useInitialState';
-import '../assets/styles/App.scss';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 
-const API = 'http://localhost:3000/initalState'
+import Search from "../components/Search";
+import Categories from "../components/Categories";
+import Carousel from "../components/Carousel";
+import CarouselItem from "../components/CarouselItem";
+import useInitialState from "../hooks/useInitialState";
+import "../assets/styles/App.scss";
 
-const Home = () => {
-  const initialState = useInitialState(API);
-  return initialState.length === 0 ? <h1>Loading...</h1> : (
+const Home = ({myList, trends, originals}) => {
+  return (
     <>
       <Search />
-      {initialState.mylist.length > 0 &&
+      {myList.length > 0 && (
         <Categories title="Mi Lista">
           <Carousel>
-            {initialState.mylist.map(item =>
+            {myList.map((item) => (
               <CarouselItem key={item.id} {...item} />
-            )}
+            ))}
           </Carousel>
         </Categories>
-      }
+      )}
       <Categories title="Tendencias">
         <Carousel>
-          {initialState.trends.map(item =>
+          {trends.map((item) => (
             <CarouselItem key={item.id} {...item} />
-          )}
+          ))}
         </Carousel>
       </Categories>
       <Categories title="Originales de Platzi Video">
         <Carousel>
-          {initialState.originals.map(item =>
+          {originals.map((item) => (
             <CarouselItem key={item.id} {...item} />
-          )}
+          ))}
         </Carousel>
       </Categories>
     </>
   );
-}
+};
 
-export default Home;
+//trae los props de nuestro estado
+//solo traer los elementos que necesito del state
+
+const mapStateToProps = (state) => {
+  return {
+    myList: state.myList,
+    trends: state.trends,
+    originals: state.originals,
+  };
+};
+
+//export default connect(props, actions)(Home); //es la forma en que se pasa
+export default connect(mapStateToProps, null)(Home);
+//mapStateToProps ..vamos a pasar lo q tenemos en el estado a propiedades que va utilizar nuestro documento
+//null...mapear las acciones que vamos ejecutar, significa algunos eventos que vamos tener que llamar,
+// esto nos permite a ejecutar a algun reducer lo vamos traer de aqui
