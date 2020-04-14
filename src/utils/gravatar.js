@@ -6,3 +6,5 @@ const Gravatar = (email) => {
     const hash = md5(formatEmail, {encoding: "binary"});
     return `${base}${hash}`
 }
+
+export default Gravatar;
